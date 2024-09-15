@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Variables
+REPO_URL="${REPO_URL}"  # URL del repositorio de Git (pasado por entorno)
+BRANCH="${BRANCH}"  # Rama del repositorio
+DIRECTORY="${DIRECTORY}"  # Directorio donde están los archivos de guardado
+COMMIT_MESSAGE="${COMMIT_MESSAGE:-"Auto-commit: Updated save files"}"  # Mensaje de commit
+
+# Configurar Git
+cd $DIRECTORY
+git init
+git remote add origin $REPO_URL || true  # Añadir remote si no existe
+git fetch origin $BRANCH
+git checkout $BRANCH || git checkout -b $BRANCH
+git config user.name "GitHub Sync Bot"
+git config user.email "bot@example.com"
+
+# Monitorear cambios y sincronizar con el repositorio
+while true; do
+  echo "Checking for changes in save files..."
+
+  # Buscar cambios en archivos de guardado
+  if git diff --quiet; then
+    echo "No changes detected."
+  else
+    echo "Changes detected! Preparing to commit and push..."
+
+    # Agregar archivos cambiados al commit
+    git add .
+
+    # Commit con mensaje predefinido
+    git commit -m "$COMMIT_MESSAGE"
+
+    # Hacer push a la rama
+    if git push origin $BRANCH; then
+      echo "Push successful!"
+    else
+      echo "Push failed. Please check the repository status."
+    fi
+  fi
+
+  # Esperar 5 minutos antes de verificar nuevamente (configurable)
+  sleep 300
+done
