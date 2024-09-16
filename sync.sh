@@ -1,13 +1,20 @@
 #!/bin/bash
 
 # Variables
-REPO_URL="${REPO_URL}"  # URL del repositorio de Git (pasado por entorno)
+REPO_URL="${REPO_URL}"  # URL del repositorio de Git
 BRANCH="${BRANCH}"  # Rama del repositorio
-DIRECTORY="${DIRECTORY}"  # Directorio donde están los archivos de guardado
+DIRECTORY="${DIRECTORY}"  # Directorio montado donde están los archivos de guardado
 COMMIT_MESSAGE="${COMMIT_MESSAGE:-"Auto-commit: Updated save files"}"  # Mensaje de commit
 
-# Configurar Git
+# Si el directorio está vacío, clonar el repositorio
+if [ ! "$(ls -A $DIRECTORY)" ]; then
+  echo "El directorio está vacío. Clonando el repositorio..."
+  git clone $REPO_URL $DIRECTORY
+fi
+
 cd $DIRECTORY
+
+# Configurar Git
 git init
 git remote add origin $REPO_URL || true  # Añadir remote si no existe
 git fetch origin $BRANCH
@@ -40,5 +47,6 @@ while true; do
   fi
 
   # Esperar 5 minutos antes de verificar nuevamente (configurable)
-  sleep 300
+  sleep 3000
 done
+
