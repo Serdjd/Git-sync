@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Variables
-REPO_URL="${REPO_URL}"  # URL del repositorio de Git
+REPO_URL="${REPO_URL}"  # URL del repositorio de Git (HTTPS)
 BRANCH="${BRANCH}"  # Rama del repositorio
 DIRECTORY="${DIRECTORY}"  # Directorio montado donde están los archivos de guardado
 COMMIT_MESSAGE="${COMMIT_MESSAGE:-"Auto-commit: Updated save files"}"  # Mensaje de commit
 
-# Si el directorio está vacío, clonar el repositorio
+# Verificar si el directorio está vacío
 if [ ! "$(ls -A $DIRECTORY)" ]; then
   echo "El directorio está vacío. Clonando el repositorio..."
   git clone $REPO_URL $DIRECTORY
@@ -21,6 +21,9 @@ git fetch origin $BRANCH
 git checkout $BRANCH || git checkout -b $BRANCH
 git config user.name "GitHub Sync Bot"
 git config user.email "bot@example.com"
+
+# Configurar credenciales (opcional, si no quieres introducirlas cada vez)
+git config credential.helper store
 
 # Monitorear cambios y sincronizar con el repositorio
 while true; do
@@ -47,6 +50,7 @@ while true; do
   fi
 
   # Esperar 5 minutos antes de verificar nuevamente (configurable)
-  sleep 3000
+  sleep 300
 done
+
 
