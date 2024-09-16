@@ -15,6 +15,7 @@ fi
 cd $DIRECTORY
 
 # Configurar Git
+git config --global --add safe.directory /config/saved/server
 git init
 git remote add origin $REPO_URL || true  # Añadir remote si no existe
 git fetch origin $BRANCH
