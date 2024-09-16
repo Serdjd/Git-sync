@@ -31,9 +31,7 @@ while true; do
   echo "Checking for changes in save files..."
 
   # Buscar cambios en archivos de guardado
-  if git diff --quiet; then
-    echo "No changes detected."
-  else
+  if git status --porcelain | grep -q .; then
     echo "Changes detected! Preparing to commit and push..."
 
     # Agregar archivos cambiados al commit
@@ -48,6 +46,8 @@ while true; do
     else
       echo "Push failed. Please check the repository status."
     fi
+  else
+    echo "No changes detected."
   fi
 
   # Esperar 5 minutos antes de verificar nuevamente (configurable)
